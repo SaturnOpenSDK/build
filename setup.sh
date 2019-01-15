@@ -615,13 +615,13 @@ clean=false
 clone=false
 patch=true
 build=true
-build_arm_c_toolchain=true
-build_sh4_c_toolchain=true
-build_sh4_libc=true
-build_sh4_cpp_compiler=true
+build_m68k_c_toolchain=true
+build_sh2_c_toolchain=true
+build_sh2_libc=true
+build_sh2_cpp_compiler=true
 build_libraries=true
 
-platform="dreamcast"
+platform="saturn"
 git_transport_prefix="https://github.com"
 gnu_url="ftp://gcc.gnu.org/pub"
 
@@ -640,10 +640,10 @@ usage=$(concat \
       "\n                  [--makejobs=<number>]" \
       "\n                  [--no-patch]" \
       "\n                  [--no-build]" \
-      "\n                  [--no-arm-toolchain]" \
-      "\n                  [--no-sh4-toolchain]" \
-      "\n                  [--no-sh4-libc]" \
-      "\n                  [--no-sh4-c++]" \
+      "\n                  [--no-m68k-toolchain]" \
+      "\n                  [--no-sh2-toolchain]" \
+      "\n                  [--no-sh2-libc]" \
+      "\n                  [--no-sh2-c++]" \
       "\n                  [--no-libraries]" \
       "\n                  [--help | -h]" \
       )
@@ -699,30 +699,30 @@ do
     ;;
 
     --no-build)
-      build_arm_c_toolchain=false
-      build_sh4_c_toolchain=false
-      build_sh4_libc=false
-      build_sh4_cpp_compiler=false
+      build_m68k_c_toolchain=false
+      build_sh2_c_toolchain=false
+      build_sh2_libc=false
+      build_sh2_cpp_compiler=false
       build_libraries=false
     ;;
 
     --no-arm-toolchain)
-      build_arm_c_toolchain=false
+      build_m68k_c_toolchain=false
     ;;
 
-    --no-sh4-toolchain)
-      build_sh4_c_toolchain=false
-      build_sh4_libc=false
-      build_sh4_cpp_compiler=false
+    --no-sh2-toolchain)
+      build_sh2_c_toolchain=false
+      build_sh2_libc=false
+      build_sh2_cpp_compiler=false
     ;;
 
-    --no-sh4-libc)
-      build_sh4_libc=false
-      build_sh4_cpp_compiler=false
+    --no-sh2-libc)
+      build_sh2_libc=false
+      build_sh2_cpp_compiler=false
     ;;
 
-    --no-sh4-c++)
-      build_sh4_cpp_compiler=false
+    --no-sh2-c++)
+      build_sh2_cpp_compiler=false
     ;;
 
     --no-libraries)
@@ -895,7 +895,7 @@ echo "\n======= [ Downloads complete! ] ======="
 ################################################################################
 echo "\n======= [ Configuring, building, installing ] ======="
 
-if ${build_arm_c_toolchain} || ${build_sh4_c_toolchain}
+if ${build_m68k_c_toolchain} || ${build_sh2_c_toolchain}
 then
   assert_dir "Binutils"   "${binutils_dir}"
   assert_dir "GCC"        "${gcc_dir}"
@@ -971,7 +971,7 @@ target_dir=${installdir}/${platform}/${target}
 cpu_options="--with-arch=armv4"
 
 # <=== BUILD ARM C TOOLCHAIN ===>
-if ${build_arm_c_toolchain}
+if ${build_m68k_c_toolchain}
 then
   configure_and_make "${binutils_dir}" "${target}"
   if [ -e "${gdb_dir}" ]
@@ -985,13 +985,13 @@ then
 fi
 # </=== BUILD ARM C TOOLCHAIN ===>
 
-# === SH4 TARGET ===
+# === sh2 TARGET ===
 target="sh-elf"
 target_dir=${installdir}/${platform}/${target}
 cpu_options="--with-endian=little --with-cpu=m4-single-only --with-multilib-list=m4-single-only,m4-nofpu,m4"
 
-# <=== BUILD SH4 C TOOLCHAIN ===>
-if ${build_sh4_c_toolchain}
+# <=== BUILD sh2 C TOOLCHAIN ===>
+if ${build_sh2_c_toolchain}
 then
   configure_and_make "${binutils_dir}" "${target}"
   if [ -e "${gdb_dir}" ]
@@ -1000,10 +1000,10 @@ then
   fi
   configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c --without-headers"
 fi
-# </=== BUILD SH4 C COMPILER ===>
+# </=== BUILD sh2 C COMPILER ===>
 
-# <=== BUILD SH4 LIB C ===>
-if ${build_sh4_libc}
+# <=== BUILD sh2 LIB C ===>
+if ${build_sh2_libc}
 then
   target_prefix=${installdir}/bin/$(target_name ${target})
   export CC_FOR_TARGET=${target_prefix}-gcc
@@ -1030,26 +1030,26 @@ then
   unset READELF_FOR_TARGET
   unset STRIP_FOR_TARGET
 fi
-# </=== BUILD SH4 LIB C ===>
+# </=== BUILD sh2 LIB C ===>
 
 environment="-e PLATFORM=${platform} -e ARCH=${target} -e INSTALL_PATH=${installdir} -e DEBUG=true"
 
-# <=== BUILD SH4 C++ COMPILER ===>
-if ${build_sh4_cpp_compiler}
+# <=== BUILD sh2 C++ COMPILER ===>
+if ${build_sh2_cpp_compiler}
 then
   assert_dir "KOS" "${kos_dir}"
-  step_template "${builddir}/${kos_dir}" "Installing headers to build SH4 C++ compiler." "sudo ${make_tool} ${environment} install_headers"  "install_headers.log"
+  step_template "${builddir}/${kos_dir}" "Installing headers to build sh2 C++ compiler." "sudo ${make_tool} ${environment} install_headers"  "install_headers.log"
 
   configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c,c++ --enable-threads=kos"
 
-  sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
+#  sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
 #  sudo cp ${basedir}/scripts/$(target_name ${target}).specs ${target_dir}/lib/specs
-  sudo rm ${target_dir}/lib/ldscripts/shlelf.*
-  sudo cp ${basedir}/scripts/shlelf.* ${target_dir}/lib/ldscripts/
-  sudo sh -c "cat ${basedir}/scripts/shlelf.x | sed -e s/$(to_upper $(to_variable $(target_name ${target})_lib_path))/$(sed_path ${target_dir}/lib)/g > ${target_dir}/lib/ldscripts/shlelf.x"
+#  sudo rm ${target_dir}/lib/ldscripts/shlelf.*
+#  sudo cp ${basedir}/scripts/shlelf.* ${target_dir}/lib/ldscripts/
+#  sudo sh -c "cat ${basedir}/scripts/shlelf.x | sed -e s/$(to_upper $(to_variable $(target_name ${target})_lib_path))/$(sed_path ${target_dir}/lib)/g > ${target_dir}/lib/ldscripts/shlelf.x"
 
 fi
-# </=== BUILD SH4 C++ COMPILER ===>
+# </=== BUILD sh2 C++ COMPILER ===>
 
 # <=== BUILD LIBRARIES ===>
 if ${build_libraries}
