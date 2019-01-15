@@ -980,7 +980,7 @@ then
   fi
   configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c --without-headers"
 
-  sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
+#  sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
 #  sudo cp ${basedir}/scripts/$(target_name ${target}).specs ${target_dir}/lib/specs
 fi
 # </=== BUILD M68k C TOOLCHAIN ===>
@@ -1040,7 +1040,7 @@ then
 #  assert_dir "KOS" "${kos_dir}"
 #  step_template "${builddir}/${kos_dir}" "Installing headers to build sh2 C++ compiler." "sudo ${make_tool} ${environment} install_headers"  "install_headers.log"
 
-  configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c,c++ --enable-threads=kos"
+  configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c,c++"
 
 #  sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
 #  sudo cp ${basedir}/scripts/$(target_name ${target}).specs ${target_dir}/lib/specs
