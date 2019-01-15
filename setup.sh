@@ -706,7 +706,7 @@ do
       build_libraries=false
     ;;
 
-    --no-arm-toolchain)
+    --no-m68k-toolchain)
       build_m68k_c_toolchain=false
     ;;
 
@@ -756,7 +756,7 @@ then
   echo -n "."
   sudo rm -f ${installdir}/bin/sh-elf-${gcc_dir}
   echo -n "."
-  sudo rm -f ${installdir}/bin/arm-eabi-${gcc_dir}
+  sudo rm -f ${installdir}/bin/m68k-${gcc_dir}
   echo "."
   echo "\n======= [ Uninstall complete! ] ======="
   if ! ${install}
@@ -965,12 +965,12 @@ configure_and_make () {
 # === FOR ALL TARGETS ===
 library_options="--with-newlib --disable-libssp --disable-tls"
 
-# === ARM TARGET ===
-target="arm-eabi"
+# === M68k TARGET ===
+target="m68k-elf"
 target_dir=${installdir}/${platform}/${target}
-cpu_options="--with-arch=armv4"
+cpu_options="--with-arch=m68k"
 
-# <=== BUILD ARM C TOOLCHAIN ===>
+# <=== BUILD M68k C TOOLCHAIN ===>
 if ${build_m68k_c_toolchain}
 then
   configure_and_make "${binutils_dir}" "${target}"
@@ -983,14 +983,14 @@ then
   sudo sh -c "cat ${basedir}/scripts/$(target_name ${target}).specs | sed -e s/$(to_upper $(to_variable $(target_name ${target})_include_path))/$(sed_path ${target_dir}/include)/g > ${target_dir}/lib/specs"
 #  sudo cp ${basedir}/scripts/$(target_name ${target}).specs ${target_dir}/lib/specs
 fi
-# </=== BUILD ARM C TOOLCHAIN ===>
+# </=== BUILD M68k C TOOLCHAIN ===>
 
-# === sh2 TARGET ===
+# === SH2 TARGET ===
 target="sh-elf"
 target_dir=${installdir}/${platform}/${target}
-cpu_options="--with-endian=little --with-cpu=m4-single-only --with-multilib-list=m4-single-only,m4-nofpu,m4"
+cpu_options="--with-endian=little --with-cpu=m2"
 
-# <=== BUILD sh2 C TOOLCHAIN ===>
+# <=== BUILD SH2 C TOOLCHAIN ===>
 if ${build_sh2_c_toolchain}
 then
   configure_and_make "${binutils_dir}" "${target}"
@@ -1000,9 +1000,9 @@ then
   fi
   configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c --without-headers"
 fi
-# </=== BUILD sh2 C COMPILER ===>
+# </=== BUILD SH2 C COMPILER ===>
 
-# <=== BUILD sh2 LIB C ===>
+# <=== BUILD SH2 LIB C ===>
 if ${build_sh2_libc}
 then
   target_prefix=${installdir}/bin/$(target_name ${target})
@@ -1030,15 +1030,15 @@ then
   unset READELF_FOR_TARGET
   unset STRIP_FOR_TARGET
 fi
-# </=== BUILD sh2 LIB C ===>
+# </=== BUILD SH2 LIB C ===>
 
 environment="-e PLATFORM=${platform} -e ARCH=${target} -e INSTALL_PATH=${installdir} -e DEBUG=true"
 
-# <=== BUILD sh2 C++ COMPILER ===>
+# <=== BUILD SH2 C++ COMPILER ===>
 if ${build_sh2_cpp_compiler}
 then
-  assert_dir "KOS" "${kos_dir}"
-  step_template "${builddir}/${kos_dir}" "Installing headers to build sh2 C++ compiler." "sudo ${make_tool} ${environment} install_headers"  "install_headers.log"
+#  assert_dir "KOS" "${kos_dir}"
+#  step_template "${builddir}/${kos_dir}" "Installing headers to build sh2 C++ compiler." "sudo ${make_tool} ${environment} install_headers"  "install_headers.log"
 
   configure_and_make "${gcc_dir}" "${target}" "${cpu_options} ${library_options} --enable-languages=c,c++ --enable-threads=kos"
 
@@ -1049,7 +1049,7 @@ then
 #  sudo sh -c "cat ${basedir}/scripts/shlelf.x | sed -e s/$(to_upper $(to_variable $(target_name ${target})_lib_path))/$(sed_path ${target_dir}/lib)/g > ${target_dir}/lib/ldscripts/shlelf.x"
 
 fi
-# </=== BUILD sh2 C++ COMPILER ===>
+# </=== BUILD SH2 C++ COMPILER ===>
 
 # <=== BUILD LIBRARIES ===>
 if ${build_libraries}
