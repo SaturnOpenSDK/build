@@ -1,5 +1,6 @@
---- a/gcc-4.9.1/gcc/diagnostic-color.c
-+++ b/gcc-4.9.1/gcc/diagnostic-color.c
+diff -ruN gcc-4.9.1/gcc/diagnostic-color.c gcc-4.9.1-fixed/gcc/diagnostic-color.c
+--- gcc-4.9.1/gcc/diagnostic-color.c
++++ gcc-4.9.1-fixed/gcc/diagnostic-color.c
 @@ -263,14 +263,6 @@
        return true;
  }

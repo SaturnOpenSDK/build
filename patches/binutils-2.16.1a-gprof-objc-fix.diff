@@ -1,5 +1,6 @@
---- a/binutils-2.16.1/gprof/Makefile.in	2004-11-30 17:20:48.000000000 +0000
-+++ b/binutils-2.16.1/gprof/Makefile.in	2014-06-10 16:36:49.528576822 +0100
+diff -ruN binutils-2.16.1/gprof/Makefile.in binutils-2.16.1-fixed/gprof/Makefile.in
+--- binutils-2.16.1/gprof/Makefile.in	2004-11-30 17:20:48.000000000 +0000
++++ binutils-2.16.1-fixed/gprof/Makefile.in	2014-06-10 16:36:49.528576822 +0100
 @@ -263,7 +263,7 @@
  	$(MAKE) $(AM_MAKEFLAGS) all-recursive
  

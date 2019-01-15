@@ -1,5 +1,6 @@
---- a/gcc-6.2.0/gcc/ubsan.c
-+++ b/gcc-6.2.0/gcc/ubsan.c
+diff -ruN gcc-6.2.0/gcc/ubsan.c gcc-4.7.0-fixed/gcc/ubsan.c
+--- gcc-6.2.0/gcc/ubsan.c
++++ gcc-6.2.0-fixed/gcc/ubsan.c
 @@ -1471,7 +1471,7 @@ ubsan_use_new_style_p (location_t loc)
  
    expanded_location xloc = expand_location (loc);

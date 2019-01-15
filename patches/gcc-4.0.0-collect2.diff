@@ -1,5 +1,6 @@
---- a/gcc-4.0.0/gcc/collect2.c	2005-01-18 11:36:01.000000000 +0000
-+++ b/gcc-4.0.0/gcc/collect2.c	2014-06-22 19:37:01.153187105 +0100
+diff -ruN gcc-4.0.0/gcc/collect2.c gcc-4.0.0-fixed/gcc/collect2.c
+--- gcc-4.0.0/gcc/collect2.c	2005-01-18 11:36:01.000000000 +0000
++++ gcc-4.0.0-fixed/gcc/collect2.c	2014-06-22 19:37:01.153187105 +0100
 @@ -1574,7 +1574,7 @@
    if (redir)
      {
